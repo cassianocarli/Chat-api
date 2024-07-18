@@ -5,8 +5,7 @@ async function listarSalas(){
 return await db.findAll('salas');
 }
 
-
-    module.exports = {listarSalas};
+   module.exports = {listarSalas};
 
 
     
