@@ -46,4 +46,4 @@ async function buscarMensagens(idsala, timestamp) {
     }
 }
 
-module.exports = { listarSalas, atualizarMensagens, buscarMensagens, buscarSala }; // Certifique-se de que buscarSala está exportado
+module.exports = { listarSalas, atualizarMensagens, buscarMensagens, buscarSala }; 

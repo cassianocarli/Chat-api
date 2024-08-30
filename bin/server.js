@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require('express');
-const app = require('../src/api');  // Importa a instância do Express corretamente
+const app = require('../src/api'); 
 
-// Configuração de middleware (se necessário)
+
 app.use((req, res, next) => {
-    // Aqui você pode configurar middlewares, se necessário
+ 
     next();
 });
 

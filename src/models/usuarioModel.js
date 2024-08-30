@@ -20,9 +20,9 @@ let buscarUsuario = async (idUser) => {
 }
 
 /**
- * Altera as informações de um usuário no banco de dados.
- * @param {object} user - O objeto com as informações do usuário.
- * @returns {Promise} - Uma promessa que resolve com o resultado da operação.
+ 
+  @param {object} user 
+ * @returns {Promise} 
  */
 let alterarUsuario = async (user) => {
     return await db.updateOne("usuarios", user, { _id: user._id });
