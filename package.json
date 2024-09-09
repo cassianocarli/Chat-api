@@ -1,18 +1,17 @@
 {
-  "name": "chat-api",
+  "name": "api-chat",
   "version": "1.0.0",
-  "description": "Demonstração inicio api-chat",
+  "description": "api",
   "main": "index.js",
   "scripts": {
     "start": "node ./bin/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "chat",
-    "api",
-    "node"
-  ],
-  "author": "Cassiano",
+  "repository": {
+    "type": "git",
+    "url": "(https://github.com/cassianocarli/Chat-api.git)"
+  },
+  "author": "cassiano",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",

@@ -1,68 +1,53 @@
-const salaModel = require('../models/salaModel'); 
+const { Timestamp } = require('mongodb');
+const salaModel = require('../models/salaModel');
 
-exports.get = async (req, res) => {
-    const salas = await salaModel.listarSalas();
-    return res.json(salas);
-};
-
-exports.entrar = async (iduser, idsala) => {
-    const sala = await salaModel.buscarSala(idsala);  
-    let usuarioModel = require('../models/usuarioModel');
-    let user = await usuarioModel.buscarUsuario(iduser);
-    user.sala = { _id: sala._id, nome: sala.nome, tipo: sala.tipo };
-    if (await usuarioModel.alterarUsuario(user)) {
-        return { msg: "OK", timestamp: Date.now() };
-    }
-    return false;
-};
+exports.get=async(req, res)=>{
+    return await salaModel.listarSalas()
+}
 
 exports.enviarMensagem = async (nick, msg, idsala) => {
     const sala = await salaModel.buscarSala(idsala);
-    if (!sala.msgs) {
+    if (!Array.isArray(sala.msgs)) {
         sala.msgs = [];
     }
-    let timestamp = Date.now();
-    sala.msgs.push({
-        timestamp: timestamp,
-        msg: msg,
-        nick: nick
-    });
-    let resp = await salaModel.atualizarMensagens(sala);
-    return { "msg": "OK", "timestamp": timestamp };
-};
-
-exports.buscarMensagens = async (idsala, timestamp) => {
-    let mensagens = await salaModel.buscarMensagens(idsala, timestamp);
-    return {
-        "timestamp": mensagens[mensagens.length - 1].timestamp,
-        "msgs": mensagens
-    };
-};
-
-exports.sair = async (iduser, idsala) => {
-    try {
-        console.log(`ID do usuário: ${iduser}`);
-        console.log(`ID da sala: ${idsala}`);
-
-        const sala = await salaModel.buscarSala(idsala);
-        console.log(`Sala encontrada: ${JSON.stringify(sala)}`);
-
-        let usuarioModel = require('../models/usuarioModel');
-        let user = await usuarioModel.buscarUsuario(iduser);
-        console.log(`Usuário encontrado: ${JSON.stringify(user)}`);
-
-        if (user.sala && user.sala._id === sala._id) {
-            user.sala = null;  // Remove o usuário da sala
-            if (await usuarioModel.alterarUsuario(user)) {
-                return { msg: "Usuário saiu da sala com sucesso" };
-            } else {
-                return { msg: "Erro ao atualizar o usuário", error: true };
-            }
-        } else {
-            return { msg: "Usuário não está na sala especificada", error: true };
+    let timestamp = Date.now()
+    sala.msgs.push(
+        {
+            nick: nick,
+            msg: msg,
+            timestamp: timestamp
         }
-    } catch (error) {
-        console.error("Erro na função sair:", error);
-        return { msg: "Erro interno do servidor", error: true };
+    )
+    console.log(sala)
+    let resp = await salaModel.atualizarMensagens(sala);
+    return { "msg": "OK", "timestamp":timestamp};
+}
+
+exports.entrar= async(iduser, idsala)=>{
+    const sala = await salaModel.buscarSala(idsala);
+    let usuarioModel=require('../models/usuarioModel');
+    let user= await usuarioModel.buscarUsuario(iduser);
+    user.sala={_id:sala._id,nome:sala.nome,tipo:sala.tipo};
+    if(await usuarioModel.alterarUsuario(user)){
+        return {msg:"OK", timestamp:timestamp=Date.now()}
+    }   
+    return false;
+} 
+
+exports.buscarMensagens = async (idsala, timestamp)=>{
+    let mensagens=await salaModel.buscarMensagens(idsala, timestamp);
+    return{
+        "timestamp":mensagens[mensagens.length - 1].timestamp,
+        "msgs":mensagens
     }
-};
+}
+exports.sair = async (iduser, idsala) => {
+    const sala = await salaModel.buscarSala(idsala);
+    let usuarioModel = require('../models/usuarioModel');
+    let user = await usuarioModel.buscarUsuario(iduser);
+    user.sala = {}
+    await usuarioModel.alterarUsuario(user);
+    if (await usuarioModel.alterarUsuario(user)) {
+        return { msg: "Saiu da sala", timestamp: timestamp = Date.now() };
+    }
+}

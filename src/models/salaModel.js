@@ -1,49 +1,38 @@
-const db = require('./db');
+ const db = require("./db");
 
-async function listarSalas() {
-    try {
-        return await db.findAll('salas');
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+
+ async function listarSalas() {
+ return await db.findAll("salas");
+ }
+
+let atualizarMensagens = async (sala) => {
+    return await db.updateOne("salas", sala,{_id:sala._id});
+}
+let buscarSala = async(idsala)=>{
+   return db.findOne("salas",idsala);
 }
 
-async function buscarSala(idsala) {
-    try {
-        return await db.findOne('salas', idsala);
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+let buscarUsuario = async(iduser)=>{
+    return db.findOne("usuarios", iduser)
 }
 
-async function atualizarMensagens(sala) {
-    try {
-        return await db.updateOne('salas', sala, { _id: sala._id });
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+let alterarUsuario = async(user)=>{
+    return await db.updateOne("usuarios", user, {_id:user._id})
 }
 
-async function buscarMensagens(idsala, timestamp) {
-    try {
-        let sala = await buscarSala(idsala);
-        if (sala.msgs) {
-            let msgs = [];
-            sala.msgs.forEach((msg) => {
-                if (msg.timestamp >= timestamp) {
-                    msgs.push(msg);
-                }
-            });
-            return msgs;
-        }
-        return [];
-    } catch (error) {
-        console.error(error);
-        throw error;
+
+let buscarMensagens = async (idsala, timestamp)=>{
+    let sala = await buscarSala(idsala);
+    if(sala.msgs){
+        let msgs=[];
+        sala.msgs.forEach((msg)=>{
+            if(msg.timestamp >= timestamp){
+                msgs.push(msg);
+            }
+        });
+        return msgs;
     }
+    return [];
 }
 
-module.exports = { listarSalas, atualizarMensagens, buscarMensagens, buscarSala }; 
+ module.exports = { listarSalas, atualizarMensagens, buscarMensagens, buscarUsuario, alterarUsuario, buscarSala}; 
